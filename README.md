@@ -36,7 +36,7 @@ Go, also called Golang or Go language, is an open source programming language th
 --- Error handling in Go
 -Project work
 --- Final project or capstone that allows learners to apply their newfound knowledge to build a complete application.
----- Implementing the tests for the final project
+--- Implementing the tests for the final project
 - Review and wrap up
 --- Review of material covered
 --- Next steps for continuing to learn and improve their Go skills
