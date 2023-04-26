@@ -25,9 +25,13 @@ Go, also called Golang or Go language, is an open source programming language th
 --- Building web servers and handling HTTP requests
 --- Creating RESTful web services
 - Testing in Go
+
     Overview of testing in Go
+
     Writing unit tests
+
     Using the testing package
+    
     Best practices for testing Go code
 - Advanced Go Features
 --- Interfaces and their uses
