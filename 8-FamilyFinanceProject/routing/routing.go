@@ -8,9 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Declare global variables to store user and income data
 var users []common.User
 var incomes []common.Incoming
 
+// Check if a user already exists based on first and last name
 func CheckUserExists(user common.User) bool {
 	for _, u := range users {
 		if u.FirstName == user.FirstName && u.LastName == user.LastName {
@@ -20,6 +22,7 @@ func CheckUserExists(user common.User) bool {
 	return false
 }
 
+// Update user's income and balance when a new income transaction is created
 func UpdateNewIncomeTransaction(income *common.Incoming) bool {
 	for i, u := range users {
 		if u.ID == income.Account_ID {
@@ -34,6 +37,7 @@ func UpdateNewIncomeTransaction(income *common.Incoming) bool {
 	return false
 }
 
+// Update user's income and balance when an existing income transaction is updated
 func UpdateIncomeTransaction(update *common.Incoming, old common.Incoming) bool {
 	for i, u := range users {
 		if u.ID == update.Account_ID {
@@ -48,6 +52,7 @@ func UpdateIncomeTransaction(update *common.Incoming, old common.Incoming) bool 
 	return false
 }
 
+// Update user's income and balance when an income transaction is deleted
 func UpdateDeletedIncome(income common.Incoming) {
 	for i, u := range users {
 		if u.ID == income.Account_ID {
@@ -60,6 +65,7 @@ func UpdateDeletedIncome(income common.Incoming) {
 	}
 }
 
+// Create routes for user-related functionality
 func CreateUsersRouting(r *gin.Engine) {
 	// Create User
 	r.POST("/users", func(c *gin.Context) {
@@ -82,7 +88,7 @@ func CreateUsersRouting(r *gin.Engine) {
 		c.JSON(http.StatusOK, users)
 	})
 
-	// Read single
+	// Read single user
 	r.GET("/users/:id", func(c *gin.Context) {
 		id := c.Param("id")
 		for _, user := range users {
@@ -119,7 +125,7 @@ func CreateUsersRouting(r *gin.Engine) {
 		for i, user := range users {
 			if strconv.Itoa(user.ID) == id {
 				users = append(users[:i], users[i+1:]...)
-				c.Status(http.StatusNoContent)
+				c.Status(http.StatusAccepted)
 				return
 			}
 		}
@@ -127,6 +133,7 @@ func CreateUsersRouting(r *gin.Engine) {
 	})
 }
 
+// Create routes for income-related functionality
 func CreateIncomeRouting(r *gin.Engine) {
 	// Create Income transaction
 	r.POST("/incomes", func(c *gin.Context) {
@@ -136,12 +143,11 @@ func CreateIncomeRouting(r *gin.Engine) {
 			return
 		}
 		if !UpdateNewIncomeTransaction(&income) {
-			c.AbortWithStatusJSON(http.StatusConflict, "Account ID does not exits")
+			c.AbortWithStatusJSON(http.StatusConflict, "Account ID does not exist")
 			return
 		}
 		income.Income_ID = len(incomes) + 1
 		incomes = append(incomes, income)
-
 		c.JSON(http.StatusCreated, income)
 	})
 
@@ -196,5 +202,4 @@ func CreateIncomeRouting(r *gin.Engine) {
 		}
 		c.AbortWithStatus(http.StatusNotFound)
 	})
-
 }
